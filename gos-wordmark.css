@@ -10,20 +10,27 @@
 
    Per app, on :root or any wrapper:
      --gos-glint   the product accent carried on the beam's leading edge (default: the silver beam)
-     --gos-plays   sweeps when the mark first appears (default 2, then it rests)
-   Sign-in screens add the class gos-wordmark--loop: the beam keeps crossing every 3.2 s.
+     --gos-plays   how many times the beam crosses. Default infinite (owner, 2026-10-17): the mark
+                   keeps flashing every 3.2 s on every screen, never stopping. A finite number
+                   makes it sweep that many times and then rest.
+   gos-wordmark--loop (on sign-in screens) also means infinite, so it stays right if the default changes.
 
    States, set by gos-wordmark.js (vendored into each app from this repository):
-     data-gos="rest"             still, after the opening sweeps
-     data-gos="once-a|once-b"    one 2.2 s sweep: pointer hover or keyboard focus
      data-gos="busy"             a 1.4 s sweep, repeating, while a save is in flight
-     data-gos="saved-a|saved-b"  one quick sweep when the save comes back
-   Without the script the mark still sweeps on arrival and rests.
+     data-gos="saved-a|saved-b"  one quick sweep when the save comes back, then back to the loop
+     data-gos="rest"             still; only used when --gos-plays is finite
+     data-gos="once-a|once-b"    one sweep on hover or focus; only for a resting mark
+   The script reads --gos-plays: while it is infinite the mark always returns to the loop.
 
    Silver #8F9296 at rest; the beam is a 232%-wide gradient moved between 100% and 0%, so it always
    covers the text and no letter is ever left transparent. Reduced motion, no text clipping, or
    Windows high contrast: solid text, no beam. */
 
+/* Declared, not only a var() fallback: gos-wordmark.js reads this value to decide whether the mark
+   returns to the loop after a save, and an undeclared property reads as empty (= rest). */
+:root {
+  --gos-plays: infinite;
+}
 .gos-wordmark {
   display: inline-block;
   white-space: nowrap;
@@ -40,7 +47,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gos-sweep 3.2s cubic-bezier(0.37, 0, 0.63, 1) var(--gos-plays, 2) both;
+  animation: gos-sweep 3.2s cubic-bezier(0.37, 0, 0.63, 1) var(--gos-plays, infinite) both;
 }
 .gos-wordmark b {
   font-weight: 700;
