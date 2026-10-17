@@ -1,0 +1,104 @@
+/* Gastevski Office Systems wordmark: the house searchlight, v10 (2026-10-17).
+
+   ONE hosted file, linked by every app:
+     <link rel="stylesheet" href="https://gastevskioffice.github.io/email-assets/gos-wordmark.css">
+   Apps never copy this block. To change the look or timing, edit this file and every app follows
+   within about ten minutes (GitHub Pages cache).
+
+   Markup     <span class="gos-wordmark"><b>Gastevski</b> Office Systems</span>
+   The wording is always on one line.
+
+   Per app, on :root or any wrapper:
+     --gos-glint   the product accent carried on the beam's leading edge (default: the silver beam)
+     --gos-plays   sweeps when the mark first appears (default 2, then it rests)
+   Sign-in screens add the class gos-wordmark--loop: the beam keeps crossing every 3.2 s.
+
+   States, set by gos-wordmark.js (vendored into each app from this repository):
+     data-gos="rest"             still, after the opening sweeps
+     data-gos="once-a|once-b"    one 2.2 s sweep: pointer hover or keyboard focus
+     data-gos="busy"             a 1.4 s sweep, repeating, while a save is in flight
+     data-gos="saved-a|saved-b"  one quick sweep when the save comes back
+   Without the script the mark still sweeps on arrival and rests.
+
+   Silver #8F9296 at rest; the beam is a 232%-wide gradient moved between 100% and 0%, so it always
+   covers the text and no letter is ever left transparent. Reduced motion, no text clipping, or
+   Windows high contrast: solid text, no beam. */
+
+.gos-wordmark {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-montserrat, 'Montserrat'), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8f9296;
+  background-image: linear-gradient(100deg, #8f9296 0%, #8f9296 43.53%, #cfd3d8 47.31%, #ffffff 50%,
+    var(--gos-glint, #cfd3d8) 53.6%, #8f9296 57.8%, #8f9296 100%);
+  background-size: 232% 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gos-sweep 3.2s cubic-bezier(0.37, 0, 0.63, 1) var(--gos-plays, 2) both;
+}
+.gos-wordmark b {
+  font-weight: 700;
+}
+.gos-wordmark--loop {
+  --gos-plays: infinite;
+}
+.gos-wordmark[data-gos="rest"] {
+  animation: none;
+  background-position: 0% 0;
+}
+.gos-wordmark[data-gos="once-a"] { animation: gos-once-a 2.2s cubic-bezier(0.37, 0, 0.63, 1) 1 both; }
+.gos-wordmark[data-gos="once-b"] { animation: gos-once-b 2.2s cubic-bezier(0.37, 0, 0.63, 1) 1 both; }
+.gos-wordmark[data-gos="busy"] { animation: gos-busy 1.4s linear infinite; }
+.gos-wordmark[data-gos="saved-a"] { animation: gos-saved-a 1.2s cubic-bezier(0.37, 0, 0.63, 1) 1 both; }
+.gos-wordmark[data-gos="saved-b"] { animation: gos-saved-b 1.2s cubic-bezier(0.37, 0, 0.63, 1) 1 both; }
+
+/* 2.2 s crossing, then 1 s still: the sweep ends at 68.75% of the 3.2 s loop. */
+@keyframes gos-sweep {
+  0%     { background-position: 100% 0; }
+  68.75% { background-position: 0% 0; }
+  100%   { background-position: 0% 0; }
+}
+/* One crossing each. Separate names so that every change of state restarts the beam. */
+@keyframes gos-once-a  { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+@keyframes gos-once-b  { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+@keyframes gos-busy    { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+@keyframes gos-saved-a { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+@keyframes gos-saved-b { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .gos-wordmark, .gos-wordmark[data-gos] { animation: none; background-image: none; -webkit-text-fill-color: #a6a6a6; color: #a6a6a6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gos-wordmark, .gos-wordmark[data-gos] { animation: none; background-image: none; -webkit-text-fill-color: #a6a6a6; color: #a6a6a6; }
+}
+@media (forced-colors: active) {
+  .gos-wordmark, .gos-wordmark[data-gos] { animation: none; background-image: none; -webkit-text-fill-color: CanvasText; color: CanvasText; }
+}
+
+/* Lockups. The wording never wraps in any of them.
+   Sign-in cards, sidebars and phone bars: product name above, wordmark below (no class needed).
+   A wide app bar: put gos-lockup--bar on the element that holds the product name and the wordmark;
+   from 900 px wide the two sit on one line, split by a hairline. Narrower, they stack.
+   Menus: gos-footer under the sign-out control holds a small wordmark. */
+@media (min-width: 900px) {
+  .gos-lockup--bar.gos-lockup--bar { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+  .gos-lockup--bar.gos-lockup--bar > * { margin-top: 0; margin-bottom: 0; }
+  .gos-lockup--bar.gos-lockup--bar .gos-wordmark {
+    border-left: 1px solid var(--gos-rule, rgba(153, 161, 173, 0.35));
+    padding-left: 10px;
+    line-height: 1.3;
+  }
+}
+.gos-footer {
+  display: flex;
+  justify-content: center;
+  padding: 8px 12px 12px;
+  font-size: 10px;
+  line-height: 1.3;
+}
