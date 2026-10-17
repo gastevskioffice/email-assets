@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* Gastevski Office Systems wordmark behaviour, v10 (2026-10-17).
 
    Canonical source: https://github.com/gastevskioffice/email-assets/blob/main/gos-wordmark.js
