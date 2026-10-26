@@ -14,7 +14,8 @@
      ("saved-a" / "saved-b") or simply settles if it failed.
    fetch and XMLHttpRequest are wrapped only to count requests: every call goes through unchanged
    and its result or error is returned untouched. Sign-in marks (--gos-plays: infinite) keep looping
-   and are never put to rest. */
+   and are never put to rest.
+   - the loop and the spinning G coin beside it run on one shared clock (see "One clock" below). */
 (function () {
   'use strict';
   if (typeof window === 'undefined' || typeof document === 'undefined' || window.__gosWordmark) return;
@@ -91,6 +92,54 @@
       else settle(el);
     });
   }
+
+  /* One clock (2026-10-26). The searchlight loop (gos-sweep, 3.2 s) and the spinning G coin beside
+     it (gos-coin-*, one turn = two loops, 6.4 s) are pinned to whole multiples of 3.2 s on the
+     document timeline, so every beam sets off as a coin face turns square to the viewer, on every
+     screen, however late the coin or the mark was drawn. A mark that comes back to the loop after a
+     save or a hover sweep waits off the text until the next beat rather than restarting out of
+     step, so the beam never jumps. Only infinite gos-sweep / gos-coin-* animations are touched. */
+  var BEAT = 3200;
+  var CLOCKED = /^gos-(sweep$|coin-)/;
+  var swept = typeof WeakSet === 'function' ? new WeakSet() : null;
+  function clock() {
+    if (!document.getAnimations || !document.timeline) return;
+    var now = document.timeline.currentTime;
+    if (now == null) return;
+    var list = document.getAnimations();
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (a.__gosClock || !a.animationName || !CLOCKED.test(a.animationName)) continue;
+      a.__gosClock = true;
+      try {
+        if (a.effect.getTiming().iterations !== Infinity) continue;
+        var start = 0;
+        var el = a.effect.target;
+        if (a.animationName === 'gos-sweep' && swept && el) {
+          if (swept.has(el)) start = Math.ceil(now / BEAT) * BEAT;
+          swept.add(el);
+        }
+        a.startTime = start;
+      } catch (e) { /* leave this one running as the browser started it */ }
+    }
+  }
+  function concerns(n) {
+    return n && n.nodeType === 1 && (n.matches('.gos-wordmark, .gos-coin') || !!n.querySelector('.gos-wordmark, .gos-coin'));
+  }
+  if (typeof MutationObserver === 'function') {
+    new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        if (r.type === 'attributes' ? concerns(r.target) : Array.prototype.some.call(r.addedNodes, concerns)) {
+          clock();
+          return;
+        }
+      }
+    }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-gos'] });
+  }
+  document.addEventListener('animationstart', function (e) { if (CLOCKED.test(e.animationName)) clock(); }, true);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', clock);
+  else clock();
 
   var nativeFetch = window.fetch;
   if (typeof nativeFetch === 'function') {
