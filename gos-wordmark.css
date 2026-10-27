@@ -149,6 +149,12 @@
   white-space: nowrap;
   vertical-align: middle;
 }
+/* Inside the signature the wordmark always takes the signature's size and sits on its centre line,
+   even where an app sizes or spaces .gos-wordmark itself, so the coin stays 2.1x its letter height. */
+.gos-sig > .gos-wordmark {
+  font-size: inherit;
+  margin: 0;
+}
 .gos-coin {
   --gos-spin: 6.4s;
   position: relative;
