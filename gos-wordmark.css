@@ -1,4 +1,5 @@
-/* Gastevski Office Systems wordmark: the house searchlight, v10 (2026-10-17).
+/* Gastevski Office Systems wordmark: the house searchlight, v10 (2026-10-17), and the spinning G
+   coin beside it (2026-10-27).
 
    ONE hosted file, linked by every app:
      <link rel="stylesheet" href="https://gastevskioffice.github.io/email-assets/gos-wordmark.css">
@@ -6,7 +7,7 @@
    within about ten minutes (GitHub Pages cache).
 
    Markup     <span class="gos-wordmark"><b>Gastevski</b> Office Systems</span>
-   The wording is always on one line.
+   The wording is always on one line. With the coin, see "The G coin" at the end of this file.
 
    Per app, on :root or any wrapper:
      --gos-glint   the product accent carried on the beam's leading edge (default: the silver beam)
@@ -116,4 +117,110 @@
   padding: 8px 12px 12px;
   font-size: 10px;
   line-height: 1.3;
+}
+
+/* The G coin (2026-10-27): the black Gastevski G as a 3D coin turning on its vertical axis beside
+   the wordmark, lit from the upper left - a shimmer and diffuse shading on each face, a rim that
+   catches the light, and a contact shadow that narrows edge-on. It is the Accounts app coin, now the
+   one copy for every app; apps never restyle or resize it.
+
+   Markup (the whole signature; keep every element, React apps write className):
+     <span class="gos-sig">
+       <span class="gos-coin" aria-hidden="true"><span class="gos-coin__tilt"><span class="gos-coin__body">
+         <i class="gos-coin__edge"></i> (nine of them)
+         <i class="gos-coin__face gos-coin__front"></i><i class="gos-coin__face gos-coin__back"></i>
+       </span></span><i class="gos-coin__shadow"></i></span>
+       <span class="gos-wordmark"><b>Gastevski</b> Office Systems</span>
+     </span>
+
+   Size: everything is in em of the signature's font size, so the coin is always 2.1x the wordmark's
+   letter height with a 0.7em gap, the Accounts proportions, in every app. To make the signature
+   bigger or smaller (a sign-in card, a landing hero), set font-size on .gos-sig or its parent, never
+   width or height on the coin.
+
+   Timing: one 6.4 s turn is two 3.2 s searchlight loops, and gos-wordmark.js pins the coin and the
+   beam to one clock, so a face turns square to the viewer each time the beam sets off, and the
+   shimmer crosses the coin left to right on the beam's own curve and timing. Moved by transform
+   only, so it never waits on the page. The face is gos-coin-g.png beside this file. */
+.gos-sig {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.gos-coin {
+  --gos-spin: 6.4s;
+  position: relative;
+  flex: none;
+  display: inline-block;
+  width: 2.1em;
+  height: 2.1em;
+  perspective: 17.5em;
+}
+.gos-coin i { font-style: normal; }
+.gos-coin__tilt { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateX(8deg); }
+.gos-coin__body { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d;
+  animation: gos-coin-spin var(--gos-spin) linear infinite; will-change: transform; }
+.gos-coin__face { position: absolute; inset: 0; display: block; border-radius: 50%; overflow: hidden;
+  background: url("gos-coin-g.png") center / 100% 100% no-repeat;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.gos-coin__front { transform: translateZ(0.0875em); }
+.gos-coin__back { transform: rotateY(180deg) translateZ(0.0875em); }
+/* Shimmer: a soft band that crosses the coin left to right in step with the searchlight beam - the
+   same 3.2 s loop, the same 2.2 s crossing on the same curve, then 1 s still. Both faces run it on the
+   same clock, so it carries straight on when the coin turns edge-on (the back face's 180deg turn
+   cancels out, so it reads left to right there too). */
+.gos-coin__face::after { content: ""; position: absolute; top: 0; left: 0; width: 300%; height: 100%; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(100deg, transparent 0%, transparent 40%, rgba(255,255,255,0.12) 45%, rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.12) 55%, transparent 60%, transparent 100%);
+  transform: translateX(-66.667%); will-change: transform;
+  animation: gos-coin-glare calc(var(--gos-spin) / 2) cubic-bezier(0.37, 0, 0.63, 1) infinite both; }
+/* Diffuse shading: the face darkens as it turns away from the light. */
+.gos-coin__face::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 30% 25%, transparent 40%, rgba(0,0,0,0.55) 100%); animation: gos-coin-shade var(--gos-spin) linear infinite; }
+.gos-coin__back::before { animation-delay: calc(var(--gos-spin) / -2); }
+.gos-coin__edge { position: absolute; inset: 3%; display: block; border-radius: 50%;
+  background: linear-gradient(90deg, #55585e, #e4e7eb 45%, #9a9da2 70%, #4a4d52);
+  animation: gos-coin-rim var(--gos-spin) linear infinite; }
+.gos-coin__edge:nth-child(1) { transform: translateZ(-0.0875em); }
+.gos-coin__edge:nth-child(2) { transform: translateZ(-0.0656em); }
+.gos-coin__edge:nth-child(3) { transform: translateZ(-0.0437em); }
+.gos-coin__edge:nth-child(4) { transform: translateZ(-0.0219em); }
+.gos-coin__edge:nth-child(5) { transform: translateZ(0.0000em); }
+.gos-coin__edge:nth-child(6) { transform: translateZ(0.0219em); }
+.gos-coin__edge:nth-child(7) { transform: translateZ(0.0437em); }
+.gos-coin__edge:nth-child(8) { transform: translateZ(0.0656em); }
+.gos-coin__edge:nth-child(9) { transform: translateZ(0.0875em); }
+/* Contact shadow under the coin, narrowing as the coin turns edge-on. */
+.gos-coin__shadow { position: absolute; display: block; left: 12%; right: 12%; bottom: -0.3em; height: 0.18em; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); animation: gos-coin-floor var(--gos-spin) linear infinite; }
+@keyframes gos-coin-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+/* The shimmer's crossing: from just off the left edge to just off the right, like gos-sweep. */
+@keyframes gos-coin-glare {
+  0%     { transform: translateX(-66.667%); }
+  68.75% { transform: translateX(0%); }
+  100%   { transform: translateX(0%); }
+}
+@keyframes gos-coin-shade {
+  0%   { opacity: 0.25; animation-timing-function: ease-in; }
+  25%  { opacity: 1; }
+  75%  { opacity: 1; animation-timing-function: ease-out; }
+  92%  { opacity: 0; animation-timing-function: ease-in-out; }
+  100% { opacity: 0.25; }
+}
+@keyframes gos-coin-rim {
+  0%, 50%, 100% { filter: brightness(0.75); }
+  25% { filter: brightness(0.85); }
+  75% { filter: brightness(1.3); }
+}
+@keyframes gos-coin-floor {
+  0%, 50%, 100% { transform: scaleX(1); opacity: 1; animation-timing-function: ease-in; }
+  25%, 75% { transform: scaleX(0.35); opacity: 0.6; animation-timing-function: ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gos-coin__body, .gos-coin__face::after, .gos-coin__face::before, .gos-coin__edge, .gos-coin__shadow { animation: none; }
+}
+@media (forced-colors: active) {
+  .gos-coin { display: none; }
 }
