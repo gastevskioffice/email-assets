@@ -120,9 +120,11 @@
 }
 
 /* The G coin (2026-10-27): the black Gastevski G as a 3D coin turning on its vertical axis beside
-   the wordmark, lit from the upper left - a shimmer and diffuse shading on each face, a rim that
-   catches the light, and a contact shadow that narrows edge-on. It is the Accounts app coin, now the
-   one copy for every app; apps never restyle or resize it.
+   the wordmark, lit from the upper left - a specular sweep and diffuse shading on each face, a rim
+   that catches the light, and a contact shadow that narrows edge-on. Since 2026-10-27 (evening) the
+   coin's face and lighting are the Control Centre landing coin as it stood on 2026-10-26 (commit
+   fb991b1 in Gastevski_VenueControl), kept at the house size (2.1em) and turn (6.4 s). It is the one
+   copy for every app; apps never restyle or resize it.
 
    Markup (the whole signature; keep every element, React apps write className):
      <span class="gos-sig">
@@ -139,9 +141,9 @@
    width or height on the coin.
 
    Timing: one 6.4 s turn is two 3.2 s searchlight loops, and gos-wordmark.js pins the coin and the
-   beam to one clock, so a face turns square to the viewer each time the beam sets off, and the
-   shimmer crosses the coin left to right on the beam's own curve and timing. Moved by transform
-   only, so it never waits on the page. The face is gos-coin-g.png beside this file. */
+   beam to one clock, so a face turns square to the viewer each time the beam sets off. The specular
+   sweep, shading, rim light and floor shadow all run on the coin's own turn, so they stay in step with
+   it. The face is gos-coin-g.png beside this file (the Control Centre logo-g.png, 256 px). */
 .gos-sig {
   display: inline-flex;
   align-items: center;
@@ -173,19 +175,14 @@
   backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .gos-coin__front { transform: translateZ(0.0875em); }
 .gos-coin__back { transform: rotateY(180deg) translateZ(0.0875em); }
-/* Shimmer: a soft band that crosses the coin left to right in step with the searchlight beam - the
-   same 3.2 s loop, the same 2.2 s crossing on the same curve, then 1 s still. Both faces run it on the
-   same clock, so it carries straight on when the coin turns edge-on (the back face's 180deg turn
-   cancels out, so it reads left to right there too). */
-.gos-coin__face::after { content: ""; position: absolute; top: 0; left: 0; width: 300%; height: 100%; pointer-events: none; mix-blend-mode: screen;
-  background: linear-gradient(100deg, transparent 0%, transparent 40%, rgba(255,255,255,0.12) 45%, rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0.12) 55%, transparent 60%, transparent 100%);
-  transform: translateX(-66.667%); will-change: transform;
-  animation: gos-coin-glare calc(var(--gos-spin) / 2) cubic-bezier(0.37, 0, 0.63, 1) infinite both; }
+/* Specular sweep: a soft diagonal band that crosses the face as it turns through the light. */
+.gos-coin__face::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.10) 42%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.10) 58%, transparent 70%);
+  background-size: 300% 300%; animation: gos-coin-glare var(--gos-spin) linear infinite; }
 /* Diffuse shading: the face darkens as it turns away from the light. */
 .gos-coin__face::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 50%; pointer-events: none;
   background: radial-gradient(circle at 30% 25%, transparent 40%, rgba(0,0,0,0.55) 100%); animation: gos-coin-shade var(--gos-spin) linear infinite; }
-.gos-coin__back::before { animation-delay: calc(var(--gos-spin) / -2); }
+.gos-coin__back::after, .gos-coin__back::before { animation-delay: calc(var(--gos-spin) / -2); }
 .gos-coin__edge { position: absolute; inset: 3%; display: block; border-radius: 50%;
   background: linear-gradient(90deg, #55585e, #e4e7eb 45%, #9a9da2 70%, #4a4d52);
   animation: gos-coin-rim var(--gos-spin) linear infinite; }
@@ -199,14 +196,16 @@
 .gos-coin__edge:nth-child(8) { transform: translateZ(0.0656em); }
 .gos-coin__edge:nth-child(9) { transform: translateZ(0.0875em); }
 /* Contact shadow under the coin, narrowing as the coin turns edge-on. */
-.gos-coin__shadow { position: absolute; display: block; left: 12%; right: 12%; bottom: -0.3em; height: 0.18em; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); animation: gos-coin-floor var(--gos-spin) linear infinite; }
+.gos-coin__shadow { position: absolute; display: block; left: 12%; right: 12%; bottom: -0.39em; height: 0.22em; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.7), transparent 70%); animation: gos-coin-floor var(--gos-spin) linear infinite; }
 @keyframes gos-coin-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-/* The shimmer's crossing: from just off the left edge to just off the right, like gos-sweep. */
+/* Front face is visible 0-25% and 75-100% of the turn; the back runs half a turn behind. */
 @keyframes gos-coin-glare {
-  0%     { transform: translateX(-66.667%); }
-  68.75% { transform: translateX(0%); }
-  100%   { transform: translateX(0%); }
+  0%   { background-position: 62% 62%; opacity: 0.55; animation-timing-function: ease-in; }
+  25%  { background-position: 100% 100%; opacity: 0; }
+  75%  { background-position: 0% 0%; opacity: 0; animation-timing-function: ease-out; }
+  92%  { background-position: 45% 45%; opacity: 0.75; animation-timing-function: ease-in-out; }
+  100% { background-position: 62% 62%; opacity: 0.55; }
 }
 @keyframes gos-coin-shade {
   0%   { opacity: 0.25; animation-timing-function: ease-in; }
