@@ -13,8 +13,12 @@ app wordmark. Served two ways:
   links it from GitHub Pages and never copies the block; edit it here and every app follows.
   Apps set only `--gos-glint` (their accent on the beam) and use `gos-wordmark--loop` on sign-in screens.
   The beam crosses every 3.2 s on every screen and never stops (`--gos-plays: infinite`, owner 2026-10-17).
+- The same file carries the spinning G coin beside the wordmark (the `gos-sig` signature markup,
+  documented at the end of the stylesheet) and its face image `gos-coin-g.png`. It is the Accounts app
+  coin, now the one copy for every app. It is sized in em of the signature, so the coin is always 2.1x
+  the wordmark's letter height; apps size the signature by font-size only and never restyle the coin.
 - `gos-wordmark.js` is the behaviour (a faster sweep while a save is in flight, one quick sweep when it
-  lands, then back to the loop). Each app serves its own identical copy of this file, because a script
+  lands, then back to the loop, and the one clock that keeps the coin's turn in step with the beam). Each app serves its own identical copy of this file, because a script
   loaded from another site could run in every app. Change it here first, then copy it into the apps.
 
 ## The email sign-off
