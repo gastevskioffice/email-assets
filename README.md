@@ -19,6 +19,9 @@ app wordmark. Served two ways:
   coin, now the one copy for every app. It is sized in em of the signature, so the coin is always 2.1x
   the wordmark's letter height; apps size the signature by font-size only and never restyle the coin.
   The complete signature renders at 90% of its previous size (owner, 2026-10-28).
+- App headers use a smaller app title with the signature aligned to its right. Phone web
+  headers (up to 600px) stack **Gastevski** above **Office Systems**, matching Operations.
+  Wider headers keep **Gastevski Office Systems** on one line.
 - `gos-wordmark.js` is the behaviour (a faster sweep while a save is in flight, one quick sweep when it
   lands, then back to the loop, and the one clock that keeps the coin's turn in step with the beam). Each app serves its own identical copy of this file, because a script
   loaded from another site could run in every app. Change it here first, then copy it into the apps.
