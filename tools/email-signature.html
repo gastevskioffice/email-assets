@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- The email sign-off, drawn from the canonical stylesheet beside it. tools/render_email_signature.py
+     opens this page, seeks every animation frame by frame and writes the GIF. Do not restyle the coin
+     or the wordmark here: change gos-wordmark.css and re-render. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=block">
+<link rel="stylesheet" href="../gos-wordmark.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #161616; }
+  /* The capsule the email shows: 254 x 36 at 1x, the size every sent email already reserves. */
+  #capsule { width: 254px; height: 36px; background: #161616; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; }
+  #capsule .gos-sig { font-size: 10px; }
+</style>
+</head>
+<body>
+<div id="capsule">
+  <span class="gos-sig">
+    <span class="gos-coin" aria-hidden="true"><span class="gos-coin__tilt"><span class="gos-coin__body">
+      <i class="gos-coin__edge"></i><i class="gos-coin__edge"></i><i class="gos-coin__edge"></i>
+      <i class="gos-coin__edge"></i><i class="gos-coin__edge"></i><i class="gos-coin__edge"></i>
+      <i class="gos-coin__edge"></i><i class="gos-coin__edge"></i><i class="gos-coin__edge"></i>
+      <i class="gos-coin__face gos-coin__front"></i><i class="gos-coin__face gos-coin__back"></i>
+    </span></span><i class="gos-coin__shadow"></i></span>
+    <span class="gos-wordmark"><b>Gastevski</b> Office Systems</span>
+  </span>
+</div>
+</body>
+</html>
