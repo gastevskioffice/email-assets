@@ -28,6 +28,18 @@ app wordmark. Served two ways:
 
 ## The email sign-off
 
-`gastevski-office-systems-v10.gif` is current: the G and the wordmark in the dark capsule, the beam
-crossing at 25 fps (40 ms frames) in 2.2 s, then 1 s still (3.2 s loop). The first frame is the
-still mark, which is what Outlook shows. Earlier versions stay because sent emails still load them.
+`gastevski-office-systems-v11.gif` is current (owner, 2026-11-07): the app signature itself, the
+spinning G coin beside the searchlight wordmark, in the dark capsule at 254 x 36 (drawn at 2x,
+508 x 72). It is rendered from `gos-wordmark.css`, never drawn by hand:
+
+    python tools/render_email_signature.py gastevski-office-systems-v<N>.gif
+
+The script opens `tools/email-signature.html` (the `gos-sig` markup on the capsule, linking this
+repository's stylesheet) in headless Chromium, pauses every animation and seeks frame by frame. One
+loop is one 6.4 s coin turn, which is two 3.2 s beam crossings, at 25 fps (160 frames, 64 colours,
+about 240 KB). Frame 0 is the still mark (coin square to the viewer, beam at rest), which is what a
+client that does not animate GIFs shows. When the coin or the wordmark changes in the stylesheet,
+re-render into the next version number and repoint the senders.
+
+The emails reserve 254 x 36, so moving between versions is a file-name swap in each sender. Earlier
+versions stay because sent emails still load them; v10 (the flat G, 2026-10-17) is the previous one.
