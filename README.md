@@ -19,13 +19,17 @@ app wordmark. Served two ways:
   coin, now the one copy for every app. It is sized in em of the signature, so the coin is always 2.1x
   the wordmark's letter height; apps size the signature by font-size only and never restyle the coin.
   The complete signature renders at 90% of its previous size (owner, 2026-10-28).
-- App headers keep **Gastevski Office Systems** on one line on the right at every width,
-  aligned with the title's last text baseline. The wording determines the signature's height
+- App headers centre the main title vertically against the app icon. The title and
+  **Gastevski Office Systems** share a text baseline, with the signature on one line on
+  the right at every width. Wrapped titles use their last baseline; a venue caption stays
+  below the icon/title alignment area. The wording determines the signature's height
   and baseline; the coin is anchored to its vertical centre inside the same signature, with
   its width and gap reserved there. Always position or move the complete `gos-sig`, never
   the coin or wording separately. Phone headers scale the complete signature
   together to fit beside the title. Use `gos-app-heading` around the title and signature,
   and `gos-app-title` on the title; do not add local wrapping or bottom-alignment overrides.
+  A secondary caption uses `gos-app-identity` around the title and a `gos-app-caption`
+  sibling. Bookings' existing `appbar__identity` / `appbar__venue` markup is also supported.
 - `gos-wordmark.js` is the behaviour (a faster sweep while a save is in flight, one quick sweep when it
   lands, then back to the loop, and the one clock that keeps the coin's turn in step with the beam). Each app serves its own identical copy of this file, because a script
   loaded from another site could run in every app. Change it here first, then copy it into the apps.
