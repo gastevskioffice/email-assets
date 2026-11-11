@@ -150,13 +150,22 @@
 .gos-app-heading > .brand-mark__icon { align-self: center; flex: none; }
 .gos-app-heading .gos-sig.gos-sig,
 .gos-sig.employee-header-signature {
+  position: relative;
+  padding-inline-start: 2.8em; /* 2.1em coin + 0.7em gap, reserved as part of the signature. */
   align-items: baseline;
   align-self: baseline;
   align-self: last baseline;
   vertical-align: baseline;
 }
+/* Only the wording supplies the header baseline and height. Anchor the coin to its centre
+   so raising the wording to the title also raises the coin, including at phone sizes. */
 .gos-app-heading .gos-sig > .gos-coin,
-.gos-sig.employee-header-signature > .gos-coin { align-self: center; }
+.gos-sig.employee-header-signature > .gos-coin {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
 /* Older app shells wrap the signature in a subtitle. Pass its text baseline through
    without an extra inline line box or a shrinking wrapper. */
 .gos-app-heading > :has(> .gos-sig) {
@@ -304,4 +313,6 @@ header .header-brand:has(.gos-app-heading),
 }
 @media (forced-colors: active) {
   .gos-coin { display: none; }
+  .gos-app-heading .gos-sig.gos-sig,
+  .gos-sig.employee-header-signature { padding-inline-start: 0; }
 }

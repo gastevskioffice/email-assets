@@ -20,8 +20,10 @@ app wordmark. Served two ways:
   the wordmark's letter height; apps size the signature by font-size only and never restyle the coin.
   The complete signature renders at 90% of its previous size (owner, 2026-10-28).
 - App headers keep **Gastevski Office Systems** on one line on the right at every width,
-  aligned with the title's last text baseline. The coin stays centred beside the wording;
-  its box must not determine the text alignment. Phone headers scale the complete signature
+  aligned with the title's last text baseline. The wording determines the signature's height
+  and baseline; the coin is anchored to its vertical centre inside the same signature, with
+  its width and gap reserved there. Always position or move the complete `gos-sig`, never
+  the coin or wording separately. Phone headers scale the complete signature
   together to fit beside the title. Use `gos-app-heading` around the title and signature,
   and `gos-app-title` on the title; do not add local wrapping or bottom-alignment overrides.
 - `gos-wordmark.js` is the behaviour (a faster sweep while a save is in flight, one quick sweep when it
