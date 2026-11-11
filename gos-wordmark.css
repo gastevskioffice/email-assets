@@ -227,7 +227,9 @@ header .header-brand:has(.gos-app-heading),
    beam to one clock, so a face turns square to the viewer each time the beam sets off. The specular
    sweep, shading, rim light and floor shadow all run on the coin's own turn, so they stay in step with
    it. The face is gos-coin-g.png beside this file (the Control Centre logo-g.png, 256 px). */
-.gos-sig {
+/* Keep both parts in one flex row, even inside app subtitle rules such as
+   .login-system > span { display: block; }. Apps position the complete signature. */
+.gos-sig.gos-sig {
   display: inline-flex;
   align-items: center;
   gap: 0.7em;
